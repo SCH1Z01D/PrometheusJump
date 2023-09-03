@@ -1,34 +1,103 @@
-from flask import Flask
-from flask import request
-from flask import jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import dotenv_values
-import ai21
-import gpt4all
 import requests
 import base64
 import os
+import ai21
 
-config = dotenv_values(".env")
-api_host = config["API_HOST"]
-api_key = config["API_KEY"]
-engine_id = config["ENGINE_ID"]
+
+api_host = os.environ["API_HOST"] = "https://api.stability.ai"
+stable_diffusionAPI = os.environ["STABE_DIFFUSION_API_KEY"] = "sk--Z88fszDULuXpRVaIzRXbOe5ZcdJTccm39EPLU1u8qI7xcQcY"
+engine_id = os.environ["ENGINE_ID"] = "stable-diffusion-xl-beta-v2-2-2"
+ai21_key = os.environ["AI21_API_KEY"] = "TiAD0eWS9oI309N9S6zSGEzOvAo3hEAv"
+
 app = Flask(__name__)
+
 CORS(app)
-
-# the api key for ai21 is:
-ai21.api_key = "<API_KEY>"
-
-
+    
 @app.route("/generate", methods=["GET"])
 def generate():
-    response = ai21.Completion.execute(
-        model="j1-large",
-        temperature= 0.65,
-        minTokens=4,
-        maxTokens=32,
-        numResults=1
+    ai21.api_key = ai21_key
+    # We create 2 prompts, one for the description and then another one for the name of the product
+    prompt_description = 'You are a business consultant. Please write a short description for a product idea for an online shop inspired by the following concept: "' + \
+            request.args.get(
+                "prompt") + '"'
+    description = ai21.Completion.execute(
+            model="j2-mid",
+            prompt=prompt_description,
+            numResults=1,
+            maxTokens=64,
+            temperature=0.84,
+            topKReturn=0,
+            topP=1,
+            countPenalty={
+                "scale":0,
+                "applyToNumbers": False,
+                "applyToPunctuations": False,
+                "applyToStopwords": False,
+                "applyToWhitespaces": False,
+                "applyToEmojis": False
+        },
+        frequencyPenalty={
+            "scale": 0,
+            "applyToNumbers": False,
+            "applyToPunctuations": False,
+            "applyToStopwords": False,
+            "applyToWhitespaces": False,
+            "applyToEmojis": False
+        },
+        presencePenalty={
+            "scale": 0,
+            "applyToNumbers": False,
+            "applyToPunctuations": False,
+            "applyToStopwords": False,
+            "applyToWhitespaces": False,
+            "applyToEmojis": False
+        },
+        stopSequences=["##"]
     )
+    response = description['completions'][0]['data']['text']   
+
+    prompt_name = 'You are a business consultant. Please write a name of maximum 5 words for a product with the following description: "' +  response 
+    name = ai21.Completion.execute(
+        model="j2-mid",
+        prompt=prompt_name, 
+        numResults=1,
+        maxTokens=64,
+        temperature=0.84,
+        topKReturn=0,
+        topP=1,
+        countPenalty={
+            "scale":0,
+            "applyToNumbers": False,
+            "applyToPunctuations": False,
+            "applyToStopwords": False,
+            "applyToWhitespaces": False,
+            "applyToEmojis": False
+        },
+        frequencyPenalty={
+            "scale": 0,
+            "applyToNumbers": False,
+            "applyToPunctuations": False,
+            "applyToStopwords": False,
+            "applyToWhitespaces": False,
+            "applyToEmojis": False
+        },
+        presencePenalty={
+            "scale": 0,
+            "applyToNumbers": False,
+            "applyToPunctuations": False,
+            "applyToStopwords": False,
+            "applyToWhitespaces": False,
+            "applyToEmojis": False
+        },
+        stopSequences=["##"]
+    )
+    image_path = generate_image(name)
+    result = {"name": name, "description": description, }
+
+    return jsonify(result)
 
 
 # Calls the Stable Diffusion API and generates an image for a product name
@@ -39,7 +108,7 @@ def generate_image(product_name):
     headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": f"Bearer {api_key}"
+        "Authorization": f"Bearer {stable_diffusionAPI}"
     }
     payload = {}
     payload['text_prompts'] = [{"text": f"{prompt}"}]
