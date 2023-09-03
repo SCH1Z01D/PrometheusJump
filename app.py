@@ -8,9 +8,9 @@ import ai21
 
 
 api_host = os.environ["API_HOST"] = "https://api.stability.ai"
-stable_diffusionAPI = os.environ["STABE_DIFFUSION_API_KEY"] = "sk--Z88fszDULuXpRVaIzRXbOe5ZcdJTccm39EPLU1u8qI7xcQcY"
+stable_diffusionAPI = os.environ["STABE_DIFFUSION_API_KEY"] = "sk--Z88fszDULuXpRVaIzRXbOe5Zxxxxxxxxxxxxxxxxxxxxx"
 engine_id = os.environ["ENGINE_ID"] = "stable-diffusion-xl-beta-v2-2-2"
-ai21_key = os.environ["AI21_API_KEY"] = "TiAD0eWS9oI309N9S6zSGEzOvAo3hEAv"
+ai21_key = os.environ["AI21_API_KEY"] = "TiAD0exxxxxxxxxx"
 
 app = Flask(__name__)
 
