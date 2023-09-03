@@ -20,7 +20,7 @@ CORS(app)
 def generate():
     ai21.api_key = ai21_key
     # We create 2 prompts, one for the description and then another one for the name of the product
-    prompt_description = 'You are a business consultant. Please write a short description for a product idea for an online shop inspired by the following concept: "' + \
+    prompt_description = 'You want to create a new and refreshing comic : "' + \
             request.args.get(
                 "prompt") + '"'
     description = ai21.Completion.execute(
@@ -59,7 +59,7 @@ def generate():
     )
     response = description['completions'][0]['data']['text']   
 
-    prompt_name = 'You are a business consultant. Please write a name of maximum 5 words for a product with the following description: "' +  response 
+    prompt_name = 'Please write a name with a maximum of 5 words for the comic that you want to create: "' +  response 
     name = ai21.Completion.execute(
         model="j2-mid",
         prompt=prompt_name, 
