@@ -102,8 +102,8 @@ def generate():
 
 # Calls the Stable Diffusion API and generates an image for a product name
 def generate_image(product_name):
-    prompt = "Please generate a featured image for the following product idea: " + product_name + \
-        ". The product must be showcased in full size at the center of the image, with minimum distractive elements, and a simple monochromatic background."
+    prompt = "Please generate a realistic drawing in the syle of japanese manga: " + result + \
+        ". The images should be hyperealistic."
     url = f"{api_host}/v1/generation/{engine_id}/text-to-image"
     headers = {
         "Content-Type": "application/json",
