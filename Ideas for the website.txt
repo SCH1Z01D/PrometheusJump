@@ -1,0 +1,6 @@
+Ideas for the website:
+1. It will have a main page that will deal with the contact, about, the explanation of our services and finally the timeline of events for the users to see the progress of the work done by the 
+2. The creation suite will home the generative ai for the building of comics in multiple languages.
+3. Lastly is the library page with all of the creations published by the users.
+4. A recommendation system for all the users to gather and sort comics according to their taste.
+5. It should then later take an approach to better understand languages through engaging in user feedback on errors made.
